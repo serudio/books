@@ -7,7 +7,8 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
-import { currency, type Book } from '../data/books'
+import type { Book } from '../data/books'
+import { currency } from '../data/pricing'
 
 export function BookCard({ book }: { book: Book }) {
   return (

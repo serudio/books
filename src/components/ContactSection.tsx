@@ -12,7 +12,17 @@ import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 
+import Divider from '@mui/material/Divider'
+
 import { contact } from '../data/contact'
+import { currency, rentalTerms } from '../data/pricing'
+
+const rates = [
+  { label: 'Per week', value: rentalTerms.perWeek },
+  { label: 'Per two weeks', value: rentalTerms.perTwoWeeks },
+  { label: 'Each following day', value: rentalTerms.perExtraDay },
+  { label: 'Pledge (refundable)', value: rentalTerms.pledge },
+]
 
 export function ContactSection() {
   return (
@@ -26,6 +36,37 @@ export function ContactSection() {
         <Typography color="text.secondary" sx={{ mb: 2 }}>
           Run by {contact.ownerName}. Write to me and we'll agree on a handover time.
         </Typography>
+
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1.5 }}>
+          Rates
+        </Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
+            mb: 2,
+          }}
+        >
+          {rates.map((rate) => (
+            <Box
+              key={rate.label}
+              sx={{ p: 1.5, border: 1, borderColor: 'divider', borderRadius: 2 }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                from {rate.value} {currency}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {rate.label}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {rentalTerms.note}
+        </Typography>
+
+        <Divider sx={{ mb: 2 }} />
 
         <List
           disablePadding
