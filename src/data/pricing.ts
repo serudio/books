@@ -16,9 +16,9 @@ export const rentalTerms = {
  * admin only has to fill these in for the exceptions.
  */
 export function priceFor(book: Pick<Book, "pricePerWeek">) {
-  return book.pricePerWeek ?? rentalTerms.perWeek;
+  return book.pricePerWeek || rentalTerms.perWeek;
 }
 
 export function pledgeFor(book: Pick<Book, "pledge">) {
-  return book.pledge ?? rentalTerms.pledge;
+  return book.pledge || rentalTerms.pledge;
 }
