@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 
-import { consumeAdminReturn } from "./auth/useSession";
+import { consumeAdminReturn, useSession } from "./auth/useSession";
 import { AdminPage } from "./components/admin/AdminPage";
 import { BookList } from "./components/BookList";
 import { ContactSection } from "./components/ContactSection";
@@ -15,6 +15,7 @@ export default function App() {
   const [infoOpen, setInfoOpen] = useState(false);
   const handleCloseInfo = () => setInfoOpen(false);
   const { route, navigate } = useHashRoute();
+  const { isAdmin } = useSession();
 
   // Google drops us back on the bare URL, so restore the panel we came from.
   useEffect(() => {
@@ -25,7 +26,12 @@ export default function App() {
 
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
-      <Header onMenuClick={() => setInfoOpen((prev) => !prev)} />
+      <Header
+        onMenuClick={() => setInfoOpen((prev) => !prev)}
+        onAdminClick={
+          isAdmin && !isAdminRoute ? () => navigate("admin") : undefined
+        }
+      />
 
       <Container
         maxWidth="lg"
