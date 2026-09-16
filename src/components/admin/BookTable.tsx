@@ -33,7 +33,10 @@ type Props = {
 /** Rates inherited from the standard terms are dimmed, to set them apart. */
 function Amount({ value, isDefault }: { value: number; isDefault: boolean }) {
   return (
-    <Tooltip title={isDefault ? "Standard rate" : ""} disableHoverListener={!isDefault}>
+    <Tooltip
+      title={isDefault ? "Standard rate" : ""}
+      disableHoverListener={!isDefault}
+    >
       <Typography
         variant="body2"
         component="span"
@@ -74,7 +77,7 @@ export function BookTable({
             <TableCell>Title</TableCell>
             <TableCell>Author</TableCell>
             <TableCell align="right">Week</TableCell>
-            <TableCell align="right">Pledge</TableCell>
+            <TableCell align="right">Застава</TableCell>
             <TableCell>{isTrash ? "Deleted" : "Status"}</TableCell>
             {!isTrash && <TableCell align="right">Order</TableCell>}
             <TableCell align="right" />
@@ -94,10 +97,16 @@ export function BookTable({
               <TableCell sx={{ fontWeight: 600 }}>{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell align="right">
-                <Amount value={priceFor(book)} isDefault={book.pricePerWeek == null} />
+                <Amount
+                  value={priceFor(book)}
+                  isDefault={book.pricePerWeek == null}
+                />
               </TableCell>
               <TableCell align="right">
-                <Amount value={pledgeFor(book)} isDefault={book.pledge == null} />
+                <Amount
+                  value={pledgeFor(book)}
+                  isDefault={book.pledge == null}
+                />
               </TableCell>
               <TableCell>
                 {isTrash ? (

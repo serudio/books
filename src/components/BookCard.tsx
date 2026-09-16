@@ -62,7 +62,7 @@ export function BookCard({ book }: { book: Book }) {
             size="small"
             variant="outlined"
             icon={<SavingsOutlinedIcon />}
-            label={`Pledge ${pledgeFor(book)} ${currency}`}
+            label={`Застава ${pledgeFor(book)} ${currency}`}
           />
           {!book.available && (
             <Chip

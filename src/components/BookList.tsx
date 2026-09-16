@@ -28,7 +28,7 @@ export function BookList() {
       <Typography color="text.secondary" sx={{ mb: 3 }}>
         {loading
           ? "Loading the library…"
-          : `${books.length} titles in the library. The pledge is refunded when the book is returned.`}
+          : `${books.length} книг в бібліотеці. Застава повертається коли ви повертаєте книгу.`}
       </Typography>
 
       {error && (
