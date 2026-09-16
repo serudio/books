@@ -1,36 +1,32 @@
 import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import Alert from "@mui/material/Alert";
-import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 import { signInWithGoogle, signOut, useSession } from "../../auth/useSession";
 import type { Book } from "../../data/books";
-import { currency } from "../../data/pricing";
 import { useBooks } from "../../hooks/useBooks";
 import { isSupabaseConfigured } from "../../supabase";
 import {
   createBook,
   deleteBook,
+  emptyTrash,
+  restoreBook,
+  trashBook,
   updateBook,
   type BookInput,
 } from "../../utils/db/books";
 import { BookFormDialog } from "./BookFormDialog";
+import { BookTable } from "./BookTable";
 
 type Props = {
   onExit: () => void;
@@ -38,12 +34,16 @@ type Props = {
 
 export function AdminPage({ onExit }: Props) {
   const { session, loading: authLoading, email, isAdmin } = useSession();
-  const { books, loading, refresh } = useBooks();
+  const { books, loading, refresh } = useBooks({ includeTrashed: isAdmin });
 
+  const [tab, setTab] = useState<"catalogue" | "trash">("catalogue");
   const [editing, setEditing] = useState<Book | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const live = books.filter((book) => !book.deletedAt);
+  const trashed = books.filter((book) => book.deletedAt);
 
   const run = async (action: () => Promise<void>) => {
     setSaving(true);
@@ -62,16 +62,14 @@ export function AdminPage({ onExit }: Props) {
   const handleSubmit = (values: BookInput) =>
     run(() => (editing ? updateBook(editing.id, values) : createBook(values)));
 
-  const handleDelete = (book: Book) => {
-    if (!window.confirm(`Delete “${book.title}”? This cannot be undone.`))
-      return;
-    void run(() => deleteBook(book.id));
-  };
-
   const openDialog = (book: Book | null) => {
     setEditing(book);
     setError(null);
     setDialogOpen(true);
+  };
+
+  const confirmAnd = (message: string, action: () => Promise<void>) => {
+    if (window.confirm(message)) void run(action);
   };
 
   if (!isSupabaseConfigured) {
@@ -133,7 +131,7 @@ export function AdminPage({ onExit }: Props) {
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
-        sx={{ alignItems: { sm: "center" }, mb: 3 }}
+        sx={{ alignItems: { sm: "center" }, mb: 2 }}
       >
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="h2">Catalogue</Typography>
@@ -154,74 +152,77 @@ export function AdminPage({ onExit }: Props) {
         </Button>
       </Stack>
 
+      <Tabs
+        value={tab}
+        onChange={(_event, next: "catalogue" | "trash") => setTab(next)}
+        sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}
+      >
+        <Tab label={`Books (${live.length})`} value="catalogue" />
+        <Tab
+          value="trash"
+          label={
+            <Badge badgeContent={trashed.length} color="default">
+              <Box sx={{ pr: trashed.length ? 2 : 0 }}>Trash</Box>
+            </Badge>
+          }
+        />
+      </Tabs>
+
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
-      <TableContainer component={Paper} variant="outlined">
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Title</TableCell>
-              <TableCell>Author</TableCell>
-              <TableCell align="right">Week</TableCell>
-              <TableCell align="right">Pledge</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Order</TableCell>
-              <TableCell align="right" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {books.map((book) => (
-              <TableRow key={book.id} hover>
-                <TableCell sx={{ width: 56 }}>
-                  <Avatar
-                    variant="rounded"
-                    src={book.photo || undefined}
-                    alt=""
-                    sx={{ width: 36, height: 48 }}
-                  />
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>{book.title}</TableCell>
-                <TableCell>{book.author}</TableCell>
-                <TableCell align="right">
-                  {book.pricePerWeek} {currency}
-                </TableCell>
-                <TableCell align="right">
-                  {book.pledge} {currency}
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    size="small"
-                    color={book.available ? "success" : "default"}
-                    label={book.available ? "Available" : "Rented out"}
-                  />
-                </TableCell>
-                <TableCell align="right">{book.sortOrder ?? 0}</TableCell>
-                <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                  <IconButton
-                    size="small"
-                    aria-label={`Edit ${book.title}`}
-                    onClick={() => openDialog(book)}
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    aria-label={`Delete ${book.title}`}
-                    onClick={() => handleDelete(book)}
-                  >
-                    <DeleteOutlineIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {tab === "catalogue" ? (
+        <BookTable
+          books={live}
+          variant="catalogue"
+          emptyText="No books yet. Use “Add book” to create the first one."
+          onEdit={openDialog}
+          onTrash={(book) =>
+            void run(async () => {
+              await trashBook(book.id);
+            })
+          }
+        />
+      ) : (
+        <Stack spacing={2}>
+          {trashed.length > 0 && (
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                color="error"
+                startIcon={<DeleteSweepIcon />}
+                disabled={saving}
+                onClick={() =>
+                  confirmAnd(
+                    `Permanently delete all ${trashed.length} book(s) in the trash? This cannot be undone.`,
+                    emptyTrash,
+                  )
+                }
+              >
+                Empty trash
+              </Button>
+            </Box>
+          )}
+          <BookTable
+            books={trashed}
+            variant="trash"
+            emptyText="The trash is empty."
+            onRestore={(book) =>
+              void run(async () => {
+                await restoreBook(book.id);
+              })
+            }
+            onDeleteForever={(book) =>
+              confirmAnd(
+                `Permanently delete “${book.title}”? This cannot be undone.`,
+                () => deleteBook(book.id),
+              )
+            }
+          />
+        </Stack>
+      )}
 
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>

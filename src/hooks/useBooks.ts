@@ -4,7 +4,7 @@ import { fallbackBooks, type Book } from "../data/books";
 import { isSupabaseConfigured } from "../supabase";
 import { getBooks, mapBookRow } from "../utils/db/books";
 
-export function useBooks() {
+export function useBooks({ includeTrashed = false } = {}) {
   const [books, setBooks] = useState<Book[]>(fallbackBooks);
   const [loading, setLoading] = useState(isSupabaseConfigured);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export function useBooks() {
 
     setLoading(true);
     try {
-      const { data, error: queryError } = await getBooks();
+      const { data, error: queryError } = await getBooks({ includeTrashed });
       if (queryError) setError(queryError.message);
       else if (data) {
         setBooks(data.map(mapBookRow));
@@ -25,7 +25,7 @@ export function useBooks() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [includeTrashed]);
 
   useEffect(() => {
     // eslint-disable-next-line react/set-state-in-effect -- initial catalogue fetch

@@ -12,6 +12,8 @@ export type Book = {
   available: boolean;
   /** Position in the catalogue; lower comes first. */
   sortOrder?: number;
+  /** Set when the book is in the trash; null when it is live. */
+  deletedAt?: string | null;
 };
 
 /** Shown when Supabase is not configured, and while the real catalogue loads. */

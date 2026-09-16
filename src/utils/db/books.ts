@@ -12,10 +12,11 @@ export type BookRow = {
   pledge: number;
   available: boolean;
   sort_order: number;
+  deleted_at: string | null;
 };
 
 const columns =
-  "id, title, original_title, author, original_author, photo_url, price_per_week, pledge, available, sort_order";
+  "id, title, original_title, author, original_author, photo_url, price_per_week, pledge, available, sort_order, deleted_at";
 
 export function mapBookRow(row: BookRow): Book {
   return {
@@ -29,11 +30,12 @@ export function mapBookRow(row: BookRow): Book {
     pledge: row.pledge,
     available: row.available,
     sortOrder: row.sort_order,
+    deletedAt: row.deleted_at,
   };
 }
 
-/** The shape the admin form edits; `id` is assigned by the database. */
-export type BookInput = Omit<Book, "id">;
+/** The shape the admin form edits; the rest is managed by the database. */
+export type BookInput = Omit<Book, "id" | "deletedAt">;
 
 function toRow(book: BookInput) {
   return {
@@ -54,10 +56,14 @@ function client() {
   return supabase;
 }
 
-export async function getBooks() {
-  return client()
-    .from("books")
-    .select(columns)
+/**
+ * Trashed books are also hidden by row-level security for everyone but the
+ * admin; the filter keeps them out of the public list for the admin too.
+ */
+export async function getBooks({ includeTrashed = false } = {}) {
+  const query = client().from("books").select(columns);
+
+  return (includeTrashed ? query : query.is("deleted_at", null))
     .order("sort_order", { ascending: true })
     .returns<BookRow[]>();
 }
@@ -72,7 +78,33 @@ export async function updateBook(id: string, book: BookInput) {
   if (error) throw error;
 }
 
+/** Moves a book to the trash; the row stays, hidden from the public list. */
+export async function trashBook(id: string) {
+  const { error } = await client()
+    .from("books")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function restoreBook(id: string) {
+  const { error } = await client()
+    .from("books")
+    .update({ deleted_at: null })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+/** Permanent — the row is gone for good. */
 export async function deleteBook(id: string) {
   const { error } = await client().from("books").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function emptyTrash() {
+  const { error } = await client()
+    .from("books")
+    .delete()
+    .not("deleted_at", "is", null);
   if (error) throw error;
 }

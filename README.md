@@ -39,6 +39,13 @@ bundle grants read-only access, so the hidden URL is convenience, not the securi
 
 To change the admin address, update it in **both** that migration and `src/auth/admin.ts`.
 
+### Trash
+
+Deleting a book sets `deleted_at` instead of dropping the row. Trashed books are invisible to
+visitors — the read policy hides them from anyone who is not the admin, so it is not just a
+client-side filter. In the **Trash** tab a book can be restored, deleted forever, or the whole
+trash emptied; those two are real deletes and cannot be undone.
+
 ### One-time Supabase setup
 
 1. **Authentication → Providers → Google**: enable it, paste the Google OAuth client ID and secret
