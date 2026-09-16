@@ -10,6 +10,8 @@ export type Book = {
   pledge: number;
   photo: string;
   available: boolean;
+  /** ISO date (YYYY-MM-DD) the book comes back; only meaningful while rented. */
+  availableFrom?: string | null;
   /** Position in the catalogue; lower comes first. */
   sortOrder?: number;
   /** Set when the book is in the trash; null when it is live. */

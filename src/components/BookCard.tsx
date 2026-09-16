@@ -9,8 +9,11 @@ import Typography from "@mui/material/Typography";
 
 import type { Book } from "../data/books";
 import { currency } from "../data/pricing";
+import { formatDate } from "../utils/date";
 
 export function BookCard({ book }: { book: Book }) {
+  const backOn = book.available ? null : formatDate(book.availableFrom);
+
   return (
     <Card
       variant="outlined"
@@ -62,7 +65,11 @@ export function BookCard({ book }: { book: Book }) {
             label={`Pledge ${book.pledge} ${currency}`}
           />
           {!book.available && (
-            <Chip size="small" color="default" label="Rented out" />
+            <Chip
+              size="small"
+              color="default"
+              label={backOn ? `Available from ${backOn}` : "Rented out"}
+            />
           )}
         </Stack>
       </CardContent>

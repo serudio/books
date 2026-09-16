@@ -21,6 +21,7 @@ const emptyBook: BookInput = {
   pricePerWeek: 0,
   pledge: 0,
   available: true,
+  availableFrom: "",
   sortOrder: 0,
 };
 
@@ -28,7 +29,7 @@ function toInput(book: Book | null): BookInput {
   if (!book) return emptyBook;
 
   const { id: _id, ...rest } = book;
-  return { ...emptyBook, ...rest };
+  return { ...emptyBook, ...rest, availableFrom: book.availableFrom ?? "" };
 }
 
 type Props = {
@@ -128,6 +129,17 @@ function BookForm({ book, saving, onClose, onSubmit }: Omit<Props, "open">) {
               }
               label="Available for rent"
             />
+            {!values.available && (
+              <TextField
+                label="Available from"
+                type="date"
+                value={values.availableFrom ?? ""}
+                onChange={(event) => set("availableFrom", event.target.value)}
+                slotProps={{ inputLabel: { shrink: true } }}
+                helperText="When the book is expected back. Leave empty if unknown."
+                fullWidth
+              />
+            )}
           </Stack>
         </DialogContent>
         <DialogActions>

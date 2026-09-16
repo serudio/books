@@ -11,12 +11,13 @@ export type BookRow = {
   price_per_week: number;
   pledge: number;
   available: boolean;
+  available_from: string | null;
   sort_order: number;
   deleted_at: string | null;
 };
 
 const columns =
-  "id, title, original_title, author, original_author, photo_url, price_per_week, pledge, available, sort_order, deleted_at";
+  "id, title, original_title, author, original_author, photo_url, price_per_week, pledge, available, available_from, sort_order, deleted_at";
 
 export function mapBookRow(row: BookRow): Book {
   return {
@@ -29,6 +30,7 @@ export function mapBookRow(row: BookRow): Book {
     pricePerWeek: row.price_per_week,
     pledge: row.pledge,
     available: row.available,
+    availableFrom: row.available_from,
     sortOrder: row.sort_order,
     deletedAt: row.deleted_at,
   };
@@ -47,6 +49,8 @@ function toRow(book: BookInput) {
     price_per_week: book.pricePerWeek,
     pledge: book.pledge,
     available: book.available,
+    // Only kept while the book is out; an available book has no return date.
+    available_from: book.available ? null : book.availableFrom || null,
     sort_order: book.sortOrder ?? 0,
   };
 }

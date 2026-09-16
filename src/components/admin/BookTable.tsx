@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 
 import type { Book } from "../../data/books";
 import { currency } from "../../data/pricing";
+import { formatDate } from "../../utils/date";
 
 type Props = {
   books: Book[];
@@ -93,7 +94,11 @@ export function BookTable({
                   <Chip
                     size="small"
                     color={book.available ? "success" : "default"}
-                    label={book.available ? "Available" : "Rented out"}
+                    label={
+                      book.available
+                        ? "Available"
+                        : (formatDate(book.availableFrom) ?? "Rented out")
+                    }
                   />
                 )}
               </TableCell>
