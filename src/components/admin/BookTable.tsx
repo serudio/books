@@ -16,7 +16,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
 import type { Book } from "../../data/books";
-import { currency } from "../../data/pricing";
+import { currency, pledgeFor, priceFor } from "../../data/pricing";
 import { formatDate } from "../../utils/date";
 
 type Props = {
@@ -29,6 +29,22 @@ type Props = {
   onRestore?: (book: Book) => void;
   onDeleteForever?: (book: Book) => void;
 };
+
+/** Rates inherited from the standard terms are dimmed, to set them apart. */
+function Amount({ value, isDefault }: { value: number; isDefault: boolean }) {
+  return (
+    <Tooltip title={isDefault ? "Standard rate" : ""} disableHoverListener={!isDefault}>
+      <Typography
+        variant="body2"
+        component="span"
+        color={isDefault ? "text.secondary" : "text.primary"}
+        sx={{ fontStyle: isDefault ? "italic" : "normal" }}
+      >
+        {value} {currency}
+      </Typography>
+    </Tooltip>
+  );
+}
 
 export function BookTable({
   books,
@@ -78,10 +94,10 @@ export function BookTable({
               <TableCell sx={{ fontWeight: 600 }}>{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell align="right">
-                {book.pricePerWeek} {currency}
+                <Amount value={priceFor(book)} isDefault={book.pricePerWeek == null} />
               </TableCell>
               <TableCell align="right">
-                {book.pledge} {currency}
+                <Amount value={pledgeFor(book)} isDefault={book.pledge == null} />
               </TableCell>
               <TableCell>
                 {isTrash ? (

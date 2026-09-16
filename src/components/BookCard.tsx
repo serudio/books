@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import type { Book } from "../data/books";
-import { currency } from "../data/pricing";
+import { currency, pledgeFor, priceFor } from "../data/pricing";
 import { formatDate } from "../utils/date";
 
 export function BookCard({ book }: { book: Book }) {
@@ -56,13 +56,13 @@ export function BookCard({ book }: { book: Book }) {
           <Chip
             size="small"
             color="secondary"
-            label={`${book.pricePerWeek} ${currency} / week`}
+            label={`${priceFor(book)} ${currency} / week`}
           />
           <Chip
             size="small"
             variant="outlined"
             icon={<SavingsOutlinedIcon />}
-            label={`Pledge ${book.pledge} ${currency}`}
+            label={`Pledge ${pledgeFor(book)} ${currency}`}
           />
           {!book.available && (
             <Chip

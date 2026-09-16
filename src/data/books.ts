@@ -4,10 +4,10 @@ export type Book = {
   originalTitle?: string;
   author: string;
   originalAuthor?: string;
-  /** Rental price per week, in the currency below. */
-  pricePerWeek: number;
-  /** Refundable deposit held while the book is rented. */
-  pledge: number;
+  /** Price per week; null falls back to the standard rate. */
+  pricePerWeek: number | null;
+  /** Refundable deposit; null falls back to the standard pledge. */
+  pledge: number | null;
   photo: string;
   available: boolean;
   /** ISO date (YYYY-MM-DD) the book comes back; only meaningful while rented. */

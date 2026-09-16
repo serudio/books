@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
 import type { Book } from "../../data/books";
+import { currency, rentalTerms } from "../../data/pricing";
 import type { BookInput } from "../../utils/db/books";
 
 const emptyBook: BookInput = {
@@ -18,12 +19,18 @@ const emptyBook: BookInput = {
   author: "",
   originalAuthor: "",
   photo: "",
-  pricePerWeek: 0,
-  pledge: 0,
+  pricePerWeek: null,
+  pledge: null,
   available: true,
   availableFrom: "",
   sortOrder: 0,
 };
+
+/** An empty field means "use the standard rate", which is null — not zero. */
+function toAmount(raw: string) {
+  const trimmed = raw.trim();
+  return trimmed === "" ? null : Number(trimmed);
+}
 
 function toInput(book: Book | null): BookInput {
   if (!book) return emptyBook;
@@ -97,17 +104,21 @@ function BookForm({ book, saving, onClose, onSubmit }: Omit<Props, "open">) {
               <TextField
                 label="Price per week"
                 type="number"
-                value={values.pricePerWeek}
+                value={values.pricePerWeek ?? ""}
                 onChange={(event) =>
-                  set("pricePerWeek", Number(event.target.value))
+                  set("pricePerWeek", toAmount(event.target.value))
                 }
+                placeholder={String(rentalTerms.perWeek)}
+                helperText={`Empty = standard ${rentalTerms.perWeek} ${currency}`}
                 fullWidth
               />
               <TextField
                 label="Pledge"
                 type="number"
-                value={values.pledge}
-                onChange={(event) => set("pledge", Number(event.target.value))}
+                value={values.pledge ?? ""}
+                onChange={(event) => set("pledge", toAmount(event.target.value))}
+                placeholder={String(rentalTerms.pledge)}
+                helperText={`Empty = standard ${rentalTerms.pledge} ${currency}`}
                 fullWidth
               />
               <TextField

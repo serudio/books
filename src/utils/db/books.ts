@@ -8,8 +8,8 @@ export type BookRow = {
   author: string;
   original_author: string | null;
   photo_url: string | null;
-  price_per_week: number;
-  pledge: number;
+  price_per_week: number | null;
+  pledge: number | null;
   available: boolean;
   available_from: string | null;
   sort_order: number;
@@ -46,8 +46,8 @@ function toRow(book: BookInput) {
     author: book.author.trim(),
     original_author: book.originalAuthor?.trim() || null,
     photo_url: book.photo.trim() || null,
-    price_per_week: book.pricePerWeek,
-    pledge: book.pledge,
+    price_per_week: book.pricePerWeek ?? null,
+    pledge: book.pledge ?? null,
     available: book.available,
     // Only kept while the book is out; an available book has no return date.
     available_from: book.available ? null : book.availableFrom || null,
