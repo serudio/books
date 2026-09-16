@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { fallbackBooks, type Book } from "../data/books";
 import { isSupabaseConfigured } from "../supabase";
@@ -9,29 +9,34 @@ export function useBooks() {
   const [loading, setLoading] = useState(isSupabaseConfigured);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     if (!isSupabaseConfigured) return;
 
-    let cancelled = false;
-
-    getBooks()
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) setError(error.message);
-        else if (data) setBooks(data.map(mapBookRow));
-      })
-      .catch((cause: unknown) => {
-        if (!cancelled)
-          setError(cause instanceof Error ? cause.message : String(cause));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
+    setLoading(true);
+    try {
+      const { data, error: queryError } = await getBooks();
+      if (queryError) setError(queryError.message);
+      else if (data) {
+        setBooks(data.map(mapBookRow));
+        setError(null);
+      }
+    } catch (cause: unknown) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { books, loading, error, usingFallback: !isSupabaseConfigured };
+  useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect -- initial catalogue fetch
+    void refresh();
+  }, [refresh]);
+
+  return {
+    books,
+    loading,
+    error,
+    refresh,
+    usingFallback: !isSupabaseConfigured,
+  };
 }

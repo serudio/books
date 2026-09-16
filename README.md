@@ -23,11 +23,30 @@ Other scripts: `npm run build`, `npm run preview`, `npm run lint`.
 
 ## Editing content
 
-Everything is plain data, no backend:
-
-- Books: `src/data/books.ts` (also `currency`)
+- Books live in Supabase and are edited in the hidden admin panel (below).
+  `src/data/books.ts` only holds the fallback list shown when Supabase is unreachable.
 - Contacts, location, hours: `src/data/contact.ts`
 - Colours and fonts: `src/theme.ts`
+
+## Admin panel
+
+The panel is at **`/books/#admin`** — it is not linked from anywhere in the UI.
+
+Sign in with Google. Anyone can *sign in*, but only `cestserg@gmail.com` can change anything:
+row-level security in Postgres checks the email on the signed JWT
+(`public.is_admin()`, see `supabase/migrations/0003_admin_write_access.sql`). The anon key in the
+bundle grants read-only access, so the hidden URL is convenience, not the security boundary.
+
+To change the admin address, update it in **both** that migration and `src/auth/admin.ts`.
+
+### One-time Supabase setup
+
+1. **Authentication → Providers → Google**: enable it, paste the Google OAuth client ID and secret
+   from Google Cloud Console, and register Supabase's callback
+   (`https://<project>.supabase.co/auth/v1/callback`) as an authorised redirect URI there.
+2. **Authentication → URL Configuration**: set the Site URL to `https://serudio.github.io/books/`
+   and add `http://localhost:5173/` to the redirect allow-list for local work.
+3. Apply the migrations: `npm run db:migrate` (needs `SUPABASE_DB_URL` in `.env`).
 
 ## Deployment
 

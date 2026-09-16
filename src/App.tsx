@@ -2,15 +2,27 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 
+import { consumeAdminReturn } from "./auth/useSession";
+import { AdminPage } from "./components/admin/AdminPage";
 import { BookList } from "./components/BookList";
 import { ContactSection } from "./components/ContactSection";
 import { Header } from "./components/Header";
-import { useState } from "react";
+import { useHashRoute } from "./hooks/useHashRoute";
 
 export default function App() {
   const [infoOpen, setInfoOpen] = useState(false);
   const handleCloseInfo = () => setInfoOpen(false);
+  const { route, navigate } = useHashRoute();
+
+  // Google drops us back on the bare URL, so restore the panel we came from.
+  useEffect(() => {
+    if (consumeAdminReturn()) navigate("admin");
+  }, [navigate]);
+
+  const isAdminRoute = route === "admin";
+
   return (
     <Box sx={{ minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
       <Header onMenuClick={() => setInfoOpen((prev) => !prev)} />
@@ -20,10 +32,14 @@ export default function App() {
         component="main"
         sx={{ py: { xs: 4, md: 6 }, flexGrow: 1 }}
       >
-        <Stack spacing={{ xs: 5, md: 8 }}>
-          <BookList />
-          {infoOpen && <ContactSection onClose={handleCloseInfo} />}
-        </Stack>
+        {isAdminRoute ? (
+          <AdminPage onExit={() => navigate("")} />
+        ) : (
+          <Stack spacing={{ xs: 5, md: 8 }}>
+            <BookList />
+            {infoOpen && <ContactSection onClose={handleCloseInfo} />}
+          </Stack>
+        )}
       </Container>
 
       <Box component="footer" sx={{ py: 3, textAlign: "center" }}>

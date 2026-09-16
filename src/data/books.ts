@@ -10,6 +10,8 @@ export type Book = {
   pledge: number;
   photo: string;
   available: boolean;
+  /** Position in the catalogue; lower comes first. */
+  sortOrder?: number;
 };
 
 /** Shown when Supabase is not configured, and while the real catalogue loads. */
