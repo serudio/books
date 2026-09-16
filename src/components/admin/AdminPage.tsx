@@ -109,17 +109,18 @@ export function AdminPage({ onExit }: Props) {
 
   if (!isAdmin) {
     return (
-      <Paper variant="outlined" sx={{ p: 4, maxWidth: 420, mx: "auto" }}>
+      <Paper variant="outlined" sx={{ p: 4, maxWidth: 440, mx: "auto" }}>
         <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-          <Typography variant="h6">No access</Typography>
+          <Typography variant="h6">You are not an admin</Typography>
           <Typography variant="body2" color="text.secondary">
-            {email} is not allowed to edit this catalogue.
+            You are signed in as <strong>{email}</strong>. Only the library
+            owner can add, edit or remove books.
           </Typography>
-          <Button variant="outlined" onClick={() => void signOut()}>
-            Sign out
-          </Button>
-          <Button size="small" onClick={onExit}>
+          <Button variant="contained" onClick={onExit}>
             Back to the catalogue
+          </Button>
+          <Button size="small" onClick={() => void signOut()}>
+            Sign out and use another account
           </Button>
         </Stack>
       </Paper>
