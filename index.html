@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Rent books from a small home library: weekly price, refundable pledge." />
+    <!--
+      Self-referencing canonical. GitHub Pages serves this app at
+      /books/ and 301-redirects /books to it, so search engines know
+      both forms; without this tag they have to guess which is the
+      real one, and the slashless variant kept coming back as a
+      "redirect error" in Search Console. Keep the trailing slash,
+      and update the domain here if the site ever moves.
+    -->
+    <link rel="canonical" href="https://serudio.github.io/books/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

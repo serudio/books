@@ -22,7 +22,10 @@ export function BookList() {
 
   return (
     <Box component="section" id="books" sx={{ scrollMarginTop: 80 }}>
-      <Typography variant="h2" gutterBottom>
+      {/* component="h1" keeps the existing size but makes this the page's
+          one top-level heading — the page had none at all, which leaves
+          crawlers without a primary subject for it. */}
+      <Typography variant="h2" component="h1" gutterBottom>
         Available books
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
