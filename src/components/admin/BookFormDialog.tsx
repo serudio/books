@@ -75,12 +75,12 @@ function BookForm({ book, saving, onClose, onSubmit }: Omit<Props, "open">) {
               autoFocus
               fullWidth
             />
-            <TextField
+            {/* <TextField
               label="Original title"
               value={values.originalTitle ?? ""}
               onChange={(event) => set("originalTitle", event.target.value)}
               fullWidth
-            />
+            /> */}
             <TextField
               label="Author"
               value={values.author}
@@ -88,12 +88,12 @@ function BookForm({ book, saving, onClose, onSubmit }: Omit<Props, "open">) {
               required
               fullWidth
             />
-            <TextField
+            {/* <TextField
               label="Original author"
               value={values.originalAuthor ?? ""}
               onChange={(event) => set("originalAuthor", event.target.value)}
               fullWidth
-            />
+            /> */}
             <TextField
               label="Cover image URL"
               value={values.photo}
@@ -116,7 +116,9 @@ function BookForm({ book, saving, onClose, onSubmit }: Omit<Props, "open">) {
                 label="Pledge"
                 type="number"
                 value={values.pledge ?? ""}
-                onChange={(event) => set("pledge", toAmount(event.target.value))}
+                onChange={(event) =>
+                  set("pledge", toAmount(event.target.value))
+                }
                 placeholder={String(rentalTerms.pledge)}
                 helperText={`Empty = standard ${rentalTerms.pledge} ${currency}`}
                 fullWidth
