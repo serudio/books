@@ -43,6 +43,14 @@ await client.query(`
   )
 `);
 
+// Keep this off the public API on a fresh database too; see migration 0007.
+await client.query(
+  "alter table public.schema_migrations enable row level security",
+);
+await client.query(
+  "revoke all on public.schema_migrations from anon, authenticated",
+);
+
 for (const migrationFileName of migrations) {
   const { rowCount } = await client.query(
     "select 1 from public.schema_migrations where name = $1",
