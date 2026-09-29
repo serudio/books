@@ -41,7 +41,7 @@ export function BookCard({
         alt={`Cover of ${book.title}`}
         loading="lazy"
         sx={{
-          height: listView ? 100 : 260,
+          height: listView ? 112 : 260,
           objectFit: "contain",
           bgcolor: "grey.100",
           p: 1.5,
