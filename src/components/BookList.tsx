@@ -1,5 +1,6 @@
 import ClearIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -24,7 +25,14 @@ const gridSx = {
   },
 } as const;
 
+const listSx = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 3,
+} as const;
+
 export function BookList() {
+  const [listView, setListView] = useState(false);
   const { books, loading, error } = useBooks();
   const [query, setQuery] = useState("");
 
@@ -36,43 +44,51 @@ export function BookList() {
 
   return (
     <Box component="section" id="books" sx={{ scrollMarginTop: 80 }}>
-      {/* component="h1" keeps the existing size but makes this the page's
-          one top-level heading — the page had none at all, which leaves
-          crawlers without a primary subject for it. */}
-      <Typography variant="h2" component="h1" gutterBottom>
-        Available books
-      </Typography>
-      <TextField
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder="Пошук за назвою або автором"
-        aria-label="Пошук книг"
-        size="small"
-        fullWidth
-        type="search"
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-            endAdornment: searching ? (
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  aria-label="Очистити пошук"
-                  onClick={() => setQuery("")}
-                >
-                  <ClearIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ) : undefined,
-          },
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
         }}
-        sx={{ mb: 2, maxWidth: 480 }}
-      />
-
+      >
+        <Typography variant="h2" component="h1">
+          Available books
+        </Typography>
+        <TextField
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Пошук за назвою або автором"
+          aria-label="Пошук книг"
+          size="small"
+          fullWidth
+          type="search"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+              endAdornment: searching ? (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    aria-label="Очистити пошук"
+                    onClick={() => setQuery("")}
+                  >
+                    <ClearIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
+          sx={{ maxWidth: 480 }}
+        />
+        <IconButton onClick={() => setListView((prev) => !prev)}>
+          <FormatListBulletedIcon color={listView ? "action" : "disabled"} />
+        </IconButton>
+      </Box>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
         {loading
           ? "Loading the library…"
@@ -93,12 +109,14 @@ export function BookList() {
           Нічого не знайдено за запитом «{query.trim()}».
         </Typography>
       ) : (
-        <Box sx={gridSx}>
+        <Box sx={listView ? listSx : gridSx}>
           {loading
             ? Array.from({ length: 4 }, (_, index) => (
                 <Skeleton key={index} variant="rounded" height={400} />
               ))
-            : visible.map((book) => <BookCard key={book.id} book={book} />)}
+            : visible.map((book) => (
+                <BookCard key={book.id} book={book} listView={listView} />
+              ))}
         </Box>
       )}
     </Box>

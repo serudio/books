@@ -11,7 +11,13 @@ import type { Book } from "../data/books";
 import { currency, pledgeFor, priceFor } from "../data/pricing";
 import { formatDate } from "../utils/date";
 
-export function BookCard({ book }: { book: Book }) {
+export function BookCard({
+  book,
+  listView,
+}: {
+  book: Book;
+  listView: boolean;
+}) {
   const backOn = book.available ? null : formatDate(book.availableFrom);
 
   return (
@@ -19,10 +25,14 @@ export function BookCard({ book }: { book: Book }) {
       variant="outlined"
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: listView ? "row" : "column",
+        width: "100%",
         height: "100%",
         transition: "box-shadow 150ms, transform 150ms",
-        "&:hover": { boxShadow: 4, transform: "translateY(-2px)" },
+        "&:hover": {
+          boxShadow: listView ? 2 : 4,
+          transform: listView ? "none" : "translateY(-2px)",
+        },
       }}
     >
       <CardMedia
@@ -30,7 +40,13 @@ export function BookCard({ book }: { book: Book }) {
         image={book.photo}
         alt={`Cover of ${book.title}`}
         loading="lazy"
-        sx={{ height: 260, objectFit: "contain", bgcolor: "grey.100", p: 1.5 }}
+        sx={{
+          height: listView ? 100 : 260,
+          objectFit: "contain",
+          bgcolor: "grey.100",
+          p: 1.5,
+          width: listView ? 200 : "100%",
+        }}
       />
       <CardContent
         sx={{ display: "flex", flexDirection: "column", gap: 1, flexGrow: 1 }}
@@ -55,7 +71,7 @@ export function BookCard({ book }: { book: Book }) {
         >
           <Chip
             size="small"
-            color="secondary"
+            color="info"
             label={`${priceFor(book)} ${currency} / week`}
           />
           <Chip
