@@ -33,15 +33,11 @@ export default function App() {
         }
       />
 
-      <Container
-        maxWidth="lg"
-        component="main"
-        sx={{ py: { xs: 4, md: 6 }, flexGrow: 1 }}
-      >
+      <Container maxWidth="lg" component="main" sx={{ py: 2, flexGrow: 1 }}>
         {isAdminRoute ? (
           <AdminPage onExit={() => navigate("")} />
         ) : (
-          <Stack spacing={{ xs: 5, md: 8 }}>
+          <Stack spacing={{ xs: 2, md: 8 }}>
             <BookList />
             {infoOpen && <ContactSection onClose={handleCloseInfo} />}
           </Stack>

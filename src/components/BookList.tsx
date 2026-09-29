@@ -43,7 +43,7 @@ export function BookList() {
   const searching = query.trim().length > 0;
 
   return (
-    <Box component="section" id="books" sx={{ scrollMarginTop: 80 }}>
+    <Box component="section" id="books">
       <Box
         sx={{
           display: "flex",
