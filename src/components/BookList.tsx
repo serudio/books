@@ -53,7 +53,7 @@ export function BookList() {
         }}
       >
         <Typography variant="h2" component="h1">
-          Available books
+          Книги в оренду
         </Typography>
         <TextField
           value={query}
@@ -91,7 +91,7 @@ export function BookList() {
       </Box>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
         {loading
-          ? "Loading the library…"
+          ? "Завантажуємо бібліотеку…"
           : searching
             ? `Знайдено ${visible.length} з ${books.length} книг.`
             : `${books.length} книг в бібліотеці. Застава повертається коли ви повертаєте книгу.`}
@@ -99,8 +99,8 @@ export function BookList() {
 
       {error && (
         <Alert severity="warning" sx={{ mb: 3 }}>
-          Could not load the latest catalogue ({error}). Showing the last known
-          list.
+          Не вдалося завантажити каталог ({error}). Показуємо останній
+          відомий список.
         </Alert>
       )}
 

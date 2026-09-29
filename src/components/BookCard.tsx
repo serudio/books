@@ -38,7 +38,7 @@ export function BookCard({
       <CardMedia
         component="img"
         image={book.photo}
-        alt={`Cover of ${book.title}`}
+        alt={`Обкладинка книги «${book.title}»`}
         loading="lazy"
         sx={{
           height: listView ? 112 : 260,
@@ -72,7 +72,7 @@ export function BookCard({
           <Chip
             size="small"
             color="info"
-            label={`${priceFor(book)} ${currency} / week`}
+            label={`${priceFor(book)} ${currency} / тиждень`}
           />
           <Chip
             size="small"
@@ -84,7 +84,7 @@ export function BookCard({
             <Chip
               size="small"
               color="default"
-              label={backOn ? `Available from ${backOn}` : "Rented out"}
+              label={backOn ? `Доступна з ${backOn}` : "Орендована"}
             />
           )}
         </Stack>

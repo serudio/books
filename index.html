@@ -1,10 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Rent books from a small home library: weekly price, refundable pledge." />
+    <meta
+      name="description"
+      content="Оренда книг у Львові на Сихові: 50 грн на тиждень, застава 300 грн повертається. Домашня бібліотека — художня література, психологія, виховання."
+    />
     <!--
       Self-referencing canonical. GitHub Pages serves this app at
       /books/ and 301-redirects /books to it, so search engines know
@@ -20,7 +23,38 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>Book Rent</title>
+    <title>Оренда книг у Львові — домашня бібліотека на Сихові</title>
+
+    <!-- Link previews in Telegram/Viber, where the site is actually shared. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:url" content="https://serudio.github.io/books/" />
+    <meta
+      property="og:title"
+      content="Оренда книг у Львові — домашня бібліотека"
+    />
+    <meta
+      property="og:description"
+      content="50 грн на тиждень, застава 300 грн повертається. Сихів, біля Шувару."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Library",
+        "name": "Оренда книг Львів",
+        "description": "Домашня бібліотека у Львові: книги в оренду за щотижневою ставкою з поверненням застави.",
+        "url": "https://serudio.github.io/books/",
+        "inLanguage": "uk",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Львів",
+          "addressCountry": "UA"
+        },
+        "areaServed": "Львів"
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
