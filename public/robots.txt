@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://serudio.github.io/books/sitemap.xml

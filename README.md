@@ -55,6 +55,19 @@ trash emptied; those two are real deletes and cannot be undone.
    and add `http://localhost:5173/` to the redirect allow-list for local work.
 3. Apply the migrations: `npm run db:migrate` (needs `SUPABASE_DB_URL` in `.env`).
 
+## SEO
+
+`index.html` carries the Ukrainian title/description, Open Graph tags, a self-referencing
+canonical and `Library` JSON-LD. Metadata is in Ukrainian on purpose — the audience searches in
+Ukrainian, and `lang` must match the page.
+
+`robots.txt` and `sitemap.xml` deliberately do **not** live here. Crawlers only read robots.txt at
+the domain root, so a copy under `/books/` would be ignored; the real ones are in the
+`serudio.github.io` root repo, and that sitemap already lists `https://serudio.github.io/books/`.
+
+The canonical URL has a trailing slash. `/books` 301-redirects to `/books/`, so only the
+slash form is ever indexed — inspect that one in Search Console.
+
 ## Deployment
 
 Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and publishes `dist/`.
