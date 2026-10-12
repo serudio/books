@@ -81,7 +81,7 @@ export function BookCard({
           <Chip
             size="small"
             color="info"
-            label={`${priceFor(book)} ${currency} / тиждень`}
+            label={`${priceFor(book)} ${currency} / 2 тижні`}
             sx={dimmed ?? undefined}
           />
           <Chip

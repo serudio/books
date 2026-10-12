@@ -17,8 +17,9 @@ import { currency, rentalTerms } from "../data/pricing";
 import { Card, Drawer, List } from "@mui/material";
 
 const rates = [
-  { label: "За тиждень", value: rentalTerms.perWeek },
-  { label: "За 2 тижні", value: rentalTerms.perTwoWeeks },
+  // { label: "За тиждень", value: rentalTerms.perWeek },
+  { label: "За 2 тижні", value: rentalTerms.perWeek },
+  // { label: "За 2 тижні", value: rentalTerms.perTwoWeeks },
   { label: "Кожен наступний день", value: rentalTerms.perExtraDay },
   { label: "Застава", value: rentalTerms.pledge },
 ];
@@ -64,36 +65,35 @@ export function ContactSection({ onClose }: Props) {
 
         <Card sx={{ p: 1.5, mb: 2, borderRadius: 2 }}>
           <List>
-          <ListItem disableGutters>
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <TelegramIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Telegram"
-              secondary={
-                <Link
-                  href={`https://t.me/${contact.telegram.replace("@", "")}`}
-                  target="_blank"
-                >
-                  {contact.telegram}
-                </Link>
-              }
-            />
-          </ListItem>
-          <ListItem disableGutters>
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <PlaceIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary={contact.city}
-              secondary={
-                <Link href={contact.mapUrl} target="_blank" rel="noreferrer">
-                  {contact.address}
-                </Link>
-              }
-            />
-          </ListItem>
-
+            <ListItem disableGutters>
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <TelegramIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Telegram"
+                secondary={
+                  <Link
+                    href={`https://t.me/${contact.telegram.replace("@", "")}`}
+                    target="_blank"
+                  >
+                    {contact.telegram}
+                  </Link>
+                }
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <PlaceIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={contact.city}
+                secondary={
+                  <Link href={contact.mapUrl} target="_blank" rel="noreferrer">
+                    {contact.address}
+                  </Link>
+                }
+              />
+            </ListItem>
           </List>
         </Card>
       </Box>
