@@ -18,7 +18,11 @@ export function BookCard({
   book: Book;
   listView: boolean;
 }) {
-  const backOn = book.available ? null : formatDate(book.availableFrom);
+  const rented = !book.available;
+  const backOn = rented ? formatDate(book.availableFrom) : null;
+  // Dimmed, but the chip saying when it is back stays at full strength —
+  // that is the one thing a visitor looking at a rented book wants.
+  const dimmed = rented ? { opacity: 0.55 } : null;
 
   return (
     <Card
@@ -29,10 +33,13 @@ export function BookCard({
         width: "100%",
         height: "100%",
         transition: "box-shadow 150ms, transform 150ms",
-        "&:hover": {
-          boxShadow: listView ? 2 : 4,
-          transform: listView ? "none" : "translateY(-2px)",
-        },
+        bgcolor: rented ? "action.hover" : "background.paper",
+        "&:hover": rented
+          ? undefined
+          : {
+              boxShadow: listView ? 2 : 4,
+              transform: listView ? "none" : "translateY(-2px)",
+            },
       }}
     >
       <CardMedia
@@ -46,12 +53,14 @@ export function BookCard({
           bgcolor: "grey.100",
           p: 1.5,
           width: listView ? 200 : "100%",
+          filter: rented ? "grayscale(1)" : "none",
+          ...dimmed,
         }}
       />
       <CardContent
         sx={{ display: "flex", flexDirection: "column", gap: 1, flexGrow: 1 }}
       >
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, ...dimmed }}>
           <Typography
             variant="subtitle1"
             sx={{ fontWeight: 700, lineHeight: 1.3 }}
@@ -73,17 +82,20 @@ export function BookCard({
             size="small"
             color="info"
             label={`${priceFor(book)} ${currency} / тиждень`}
+            sx={dimmed ?? undefined}
           />
           <Chip
             size="small"
             variant="outlined"
             icon={<SavingsOutlinedIcon />}
             label={`Застава ${pledgeFor(book)} ${currency}`}
+            sx={dimmed ?? undefined}
           />
-          {!book.available && (
+          {rented && (
             <Chip
               size="small"
-              color="default"
+              variant="outlined"
+              color="warning"
               label={backOn ? `Доступна з ${backOn}` : "Орендована"}
             />
           )}
