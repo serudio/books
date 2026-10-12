@@ -1,18 +1,21 @@
 import ClearIcon from "@mui/icons-material/Close";
-import SearchIcon from "@mui/icons-material/Search";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import SearchIcon from "@mui/icons-material/Search";
+import TelegramIcon from "@mui/icons-material/Telegram";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
+import Link from "@mui/material/Link";
 import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useMemo, useState } from "react";
-
 import { useBooks } from "../hooks/useBooks";
 import { matchesQuery } from "../utils/search";
 import { BookCard } from "./BookCard";
+import { contact } from "../data/contact";
 
 const gridSx = {
   display: "grid",
@@ -89,18 +92,40 @@ export function BookList() {
           <FormatListBulletedIcon color={listView ? "action" : "disabled"} />
         </IconButton>
       </Box>
-      <Typography color="text.secondary" sx={{ mb: 3 }}>
-        {loading
-          ? "Завантажуємо бібліотеку…"
-          : searching
-            ? `Знайдено ${visible.length} з ${books.length} книг.`
-            : `${books.length} книг в бібліотеці. Застава повертається коли ви повертаєте книгу.`}
-      </Typography>
-
+      <Box sx={{ display: "flex", gap: 1 }}>
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
+          {loading
+            ? "Завантажуємо бібліотеку…"
+            : searching
+              ? `Знайдено ${visible.length} з ${books.length} книг.`
+              : `${books.length} книг в бібліотеці. Застава повертається коли ви повертаєте книгу.`}
+        </Typography>
+        <Card
+          sx={{
+            display: "flex",
+            p: 0.5,
+            height: "fit-content",
+            "&:hover": { background: "lightgray" },
+          }}
+        >
+          <TelegramIcon color="primary" fontSize="small" />
+          <Link
+            href={`https://t.me/${contact.telegram.replace("@", "")}`}
+            target="_blank"
+            sx={{
+              ml: 0.5,
+              fontSize: "0.875rem",
+              textDecoration: "none",
+            }}
+          >
+            {contact.telegram}
+          </Link>
+        </Card>
+      </Box>
       {error && (
         <Alert severity="warning" sx={{ mb: 3 }}>
-          Не вдалося завантажити каталог ({error}). Показуємо останній
-          відомий список.
+          Не вдалося завантажити каталог ({error}). Показуємо останній відомий
+          список.
         </Alert>
       )}
 
