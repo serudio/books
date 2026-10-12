@@ -22,7 +22,7 @@ export function BookCard({
   const backOn = rented ? formatDate(book.availableFrom) : null;
   // Dimmed, but the chip saying when it is back stays at full strength —
   // that is the one thing a visitor looking at a rented book wants.
-  const dimmed = rented ? { opacity: 0.55 } : null;
+  const dimmed = rented ? { opacity: 0.55 } : {};
 
   return (
     <Card
@@ -82,14 +82,20 @@ export function BookCard({
             size="small"
             color="info"
             label={`${priceFor(book)} ${currency} / 2 тижні`}
-            sx={dimmed ?? undefined}
+            sx={{
+              "& .MuiChip-label": { fontSize: "0.75rem" },
+              ...dimmed,
+            }}
           />
           <Chip
             size="small"
             variant="outlined"
             icon={<SavingsOutlinedIcon />}
             label={`Застава ${pledgeFor(book)} ${currency}`}
-            sx={dimmed ?? undefined}
+            sx={{
+              "& .MuiChip-label": { fontSize: "0.65rem" },
+              ...dimmed,
+            }}
           />
           {rented && (
             <Chip

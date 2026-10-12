@@ -78,7 +78,10 @@ export async function createBook(book: BookInput) {
 }
 
 export async function updateBook(id: string, book: BookInput) {
-  const { error } = await client().from("books").update(toRow(book)).eq("id", id);
+  const { error } = await client()
+    .from("books")
+    .update(toRow(book))
+    .eq("id", id);
   if (error) throw error;
 }
 
