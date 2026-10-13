@@ -66,5 +66,55 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      Same GA4 property as the root site, so /books/ shows up next to it
+      instead of being invisible. Two guards:
+        * localhost is skipped, so development never touches the numbers;
+        * opening /books/#noga once in a browser excludes that browser for
+          good (/books/#ga undoes it) — that is how you keep yourself out
+          of the counts, and it has to be done on each device you browse from.
+    -->
+    <script>
+      (function () {
+        var id = "G-4CPB5SN8DH";
+        var excluded = false;
+
+        try {
+          if (location.hash === "#noga") localStorage.setItem("ga-off", "1");
+          if (location.hash === "#ga") localStorage.removeItem("ga-off");
+          excluded = localStorage.getItem("ga-off") === "1";
+          console.info(
+            excluded
+              ? "Analytics off in this browser (#ga to undo)."
+              : "Analytics on in this browser (#noga to opt out).",
+          );
+        } catch (error) {
+          // Private mode or blocked storage: fall through and count the visit.
+        }
+
+        // Typing the hash on a page that is already open only fires
+        // hashchange, so the block above would never see it.
+        window.addEventListener("hashchange", function () {
+          if (location.hash === "#noga" || location.hash === "#ga") {
+            location.reload();
+          }
+        });
+
+        if (location.hostname !== "serudio.github.io" || excluded) return;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag("js", new Date());
+        window.gtag("config", id);
+
+        var tag = document.createElement("script");
+        tag.async = true;
+        tag.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
+        document.head.appendChild(tag);
+      })();
+    </script>
   </body>
 </html>
